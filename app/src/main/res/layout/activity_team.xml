@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/text11"
+        android:id="@+id/textView11"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -16,20 +16,20 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/text12"
+            android:id="@+id/textView12"
             android:layout_width="20dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.00" />
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/imageView2"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/mo" />
 
         <TextView
-            android:id="@+id/text16"
-            android:layout_width="23dp"
+            android:id="@+id/textView16"
+            android:layout_width="33dp"
             android:layout_height="wrap_content" />
 
         <LinearLayout
@@ -45,25 +45,32 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/text18"
+                    android:id="@+id/textView18"
                     android:layout_width="41dp"
                     android:layout_height="wrap_content"
                     android:text="이름"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/text17"
+                    android:id="@+id/textView17"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="아이디"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView24"
+                    android:layout_width="53dp"
+                    android:layout_height="wrap_content"
+                    android:text="전화번호"
                     android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="0.93"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_weight="0.93">
 
                 <TextView
                     android:id="@+id/textViewName"
@@ -72,8 +79,14 @@
                     android:text="TextView" />
 
                 <TextView
-                    android:id="@+id/textViewPlan"
+                    android:id="@+id/textViewId"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView" />
+
+                <TextView
+                    android:id="@+id/textViewPhone"
+                    android:layout_width="114dp"
                     android:layout_height="wrap_content"
                     android:text="TextView" />
 
@@ -85,23 +98,12 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/refuse"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignTop="@+id/textViewPlan"
-                    android:layout_marginEnd="13dp"
-                    android:background="@drawable/btn"
-                    android:onClick="onClick"
-                    android:text="거절"
-                    android:textColor="#ffffff" />
             </LinearLayout>
         </LinearLayout>
+
 
 
     </LinearLayout>
 
 
 </LinearLayout>
-

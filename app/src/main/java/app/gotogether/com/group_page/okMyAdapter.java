@@ -79,7 +79,7 @@ public class okMyAdapter extends BaseAdapter {
 
         }
         //view안에서 찾기 때문에 view.findviewbyid를 해주어야 한다.
-        TextView textNo = (TextView) view.findViewById(R.id.textViewNo);
+        TextView textNo = (TextView) view.findViewById(R.id.textViewPlan);
         TextView textName = (TextView) view.findViewById(R.id.textViewName);
         final Button btnCheck = (Button) view.findViewById(R.id.refuse);
         //숫자는 아이디를 찾기 때문에 문자열로 변환해주어야 한다.

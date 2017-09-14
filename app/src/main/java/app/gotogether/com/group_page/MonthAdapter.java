@@ -211,9 +211,16 @@ public class MonthAdapter extends BaseAdapter {
 
 		if (columnIndex == 0) {
 			itemView.setTextColor(Color.RED);
-		} else {
+		}
+		else if (columnIndex == 6){
+			itemView.setTextColor(Color.BLUE);
+		}
+		else {
 			itemView.setTextColor(Color.BLACK);
 		}
+
+
+
 
 		// set background color
 		if (position == getSelectedPosition()) {
@@ -221,7 +228,6 @@ public class MonthAdapter extends BaseAdapter {
         } else {
         	itemView.setBackgroundColor(Color.WHITE);
         }
-
 
 
 		return itemView;

@@ -1,31 +1,27 @@
 package app.gotogether.com.group_page;
 
-
 import android.content.Context;
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 /**
- * Created by 동덕 on 2017-05-11.
+ * Created by user on 2017-09-10.
  */
 
-public class MyAdapter extends BaseAdapter {
+public class TeamAdapter extends BaseAdapter {
 
     private Context context;
     private int layout;
-    private ArrayList<MyData> myDataList;
+    private ArrayList<TeamData> myDataList;
     private LayoutInflater layoutInflater;
     private String result = "";
 
-    public MyAdapter(Context context, int layout, ArrayList<MyData> myDataList) {
+    public TeamAdapter(Context context, int layout, ArrayList<TeamData> myDataList) {
         this.context = context;
         this.layout = layout;
         //원본 데이터를 가지고 있다(MyDataList)
@@ -65,38 +61,11 @@ public class MyAdapter extends BaseAdapter {
         //view안에서 찾기 때문에 view.findviewbyid를 해주어야 한다.
         TextView textId = (TextView) view.findViewById(R.id.textViewId);
         TextView textName = (TextView) view.findViewById(R.id.textViewName);
-        Button btnCheck = (Button) view.findViewById(R.id.btn);
+        TextView textPhone = (TextView) view.findViewById(R.id.textViewPhone);
         //숫자는 아이디를 찾기 때문에 문자열로 변환해주어야 한다.
         textId.setText(myDataList.get(position).get_id());
         textName.setText(myDataList.get(position).getName());
-
-
-        btnCheck.setOnClickListener(new Button.OnClickListener() {
-
-            public void onClick(View view) {
-
-                AlertDialog.Builder boss = new AlertDialog.Builder(context);
-
-                boss.setTitle("팀장위임");       // 제목 설정
-                boss.setPositiveButton("확인", new DialogInterface.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        result = myDataList.get(pos).get_id();
-
-                    }});
-                boss.setNegativeButton("취소", new DialogInterface.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }});
-
-
-                boss.show();
-
-
-            }
-        });
+        textPhone.setText(myDataList.get(position).getPhone());
 
 
         return view;

@@ -1,9 +1,10 @@
 package app.gotogether.com.group_page;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -73,8 +75,11 @@ public class MyActivity extends AppCompatActivity {
 
     // 클릭시 달력 하단에 리스트뷰 뜨도록
     ArrayAdapter<String> adapter;
-    ArrayList<String> as;
+    ArrayList<String> sche_list;
     ListView lv;
+    private MyScheAdapter scheAdapter;
+    private ArrayList<ScheData> scheDataList;
+    ArrayList<String> sche_id_list;
 
     ArrayList<String> team_list;
 
@@ -95,24 +100,53 @@ public class MyActivity extends AppCompatActivity {
         monthView.setAdapter(monthViewAdapter);
 
 //        // 그룹과 자신의 id값 받아오기
-        Intent intent = getIntent(); // 운영체에가 인텐트를 띄어줌 인텐트를 받아옴
-        my_id = intent.getStringExtra("my_id"); // 개인 id
+     //   Intent intent = getIntent(); // 운영체에가 인텐트를 띄어줌 인텐트를 받아옴
+        //my_id = intent.getStringExtra("my_id"); // 개인 id
+        //my_id = intent.getStringExtra("sss"); // 개인 id
+         my_id = "genius";
         //Toast.makeText(BossPage.this, groupId, Toast.LENGTH_SHORT).show();
+
+
+        // 추가) 회원탈퇴 옵션메뉴 만들기
+        ImageView imgbtn = (ImageView)findViewById(R.id.btnimage);
+
+        imgbtn.setOnClickListener(new ImageView.OnClickListener() {
+
+            public void onClick(View view) {
+
+                AlertDialog.Builder my = new AlertDialog.Builder(MyActivity.this);
+                my.setTitle("회원탈퇴");       // 제목 설정
+                my.setMessage("정말 탈퇴하시겠습니까?");
+                my.setPositiveButton("확인", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        InsertData task = new InsertData();
+                        task.execute(my_id);
+
+
+                    }});
+
+                my.show();
+
+            }
+        });
 
 
         // 달력 누르면 아래에 일정 뜨게
         lv = (ListView)findViewById(listView);
         // 그룹 정보 불러오기
-        mTextViewResult = (TextView)findViewById(R.id.result_text);
+        //
+        // mTextViewResult = (TextView)findViewById(R.id.result_text);
 //
 //        // 그룹리스트 DB 갖고오기
 //        GetData2 task = new GetData2(); // 서버에서 데이터 갖고오기
 //        task.execute("http://211.253.9.84/getgrouplist.php");
 
-        // 추가) 임시로 속한그룹 리스트 넣기
+        // 추가) 임시로 속한그룹 리스트 넣기 -> 나중에 색으로 구분
         team_list = new ArrayList<String>();
-        team_list.add("123");
-        team_list.add("0");
+        team_list.add("1");
+        //team_list.add("0");
 
 //        String bgroup = "";
 //
@@ -123,14 +157,13 @@ public class MyActivity extends AppCompatActivity {
 //                bgroup = team_list.get(i);
 //        }
 //
-//        TextView belong = (TextView)findViewById(R.id.group);
-//        belong.setText(bgroup);
 
 //
         // 팀원리스트 DB 갖고오기 -> 팀원 수 계산 , 팀장 이름 갖고오기
         GetData3 task2 = new GetData3();
         task2.execute("http://211.253.9.84/getmemberlist.php");
 
+        // 사용자 이름 설정
         GetData_user task = new GetData_user();
         //사용자 아이디 인텐트로 넘어온 값
         task.execute(my_id);
@@ -193,12 +226,10 @@ public class MyActivity extends AppCompatActivity {
 
     // 리스트뷰 업데이트
     public void updateLv(){
-        adapter= new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,as);
-        lv.setAdapter(adapter);
+        scheAdapter = new MyScheAdapter(MyActivity.this, R.layout.activity_my_sche, scheDataList);
+        lv.setAdapter(scheAdapter);
     }
 
-
-    // 추가) 회원탈퇴 옵션메뉴 만들기
 
 
     // *예슬
@@ -224,12 +255,12 @@ public class MyActivity extends AppCompatActivity {
             super.onPostExecute(result);
 
             progressDialog.dismiss();
-            mTextViewResult.setText(result);
+            //mTextViewResult.setText(result);
             Log.d(TAG2, "response  - " + result);
 
             if (result == null){
 
-                mTextViewResult.setText(errorString);
+                //mTextViewResult.setText(errorString);
             }
             else {
 
@@ -302,7 +333,8 @@ public class MyActivity extends AppCompatActivity {
             JSONObject jsonObject = new JSONObject(mJsonString);
             JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON2);
 
-            as = new ArrayList<String>(); // 170231    2017  7  5
+            sche_list = new ArrayList<String>(); // 170231    2017  7  5
+            sche_id_list = new ArrayList<String>(); // 170231    2017  7  5
 
             for(int i=0;i<jsonArray.length();i++){
 
@@ -322,14 +354,22 @@ public class MyActivity extends AppCompatActivity {
                 for(int j = 0; j < team_list.size(); j++) {
                     if (group_id.equals(team_list.get(j))) {
                         if (date.equals(d)) {
-                            as.add(plan); // 스케쥴 가져오기
+                            sche_list.add(plan); // 스케쥴 가져오기
+                            sche_id_list.add(id);
                         }
                     }
                 }
-
             }
 
-            updateLv();
+        scheDataList = new ArrayList<ScheData>();
+
+        for(int j = 0; j < sche_list.size(); j++){
+            scheDataList.add(new ScheData(sche_id_list.get(j), sche_list.get(j)));
+        }
+
+        updateLv();
+
+
 
         } catch (JSONException e) {
 
@@ -482,12 +522,12 @@ public class MyActivity extends AppCompatActivity {
             super.onPostExecute(result);
 
             progressDialog.dismiss();
-            mTextViewResult.setText(result);
+            //mTextViewResult.setText(result);
             Log.d(TAG4, "response  - " + result);
 
             if (result == null){
 
-                mTextViewResult.setText(errorString);
+                //mTextViewResult.setText(errorString);
             }
             else {
 
@@ -608,12 +648,12 @@ public class MyActivity extends AppCompatActivity {
             super.onPostExecute(result);
 
             progressDialog.dismiss();
-            mTextViewResult.setText(result);
+            //mTextViewResult.setText(result);
             Log.d(TAG_USER, "response  - " + result);
 
             if (result == null){
 
-                mTextViewResult.setText(errorString);
+                //mTextViewResult.setText(errorString);
             }
             else {
 
@@ -696,6 +736,7 @@ public class MyActivity extends AppCompatActivity {
         try {
             JSONObject jsonObject = new JSONObject(mJsonString);
             JSONArray jsonArray = jsonObject.getJSONArray(TAG_UserJSON);
+            String name = "";
 
             for(int i=0;i<jsonArray.length();i++){
 
@@ -703,14 +744,14 @@ public class MyActivity extends AppCompatActivity {
                 String user_name = item.getString(TAG_UserName);
                 String user_phone = item.getString(TAG_UserPhone);
 
-
-                TextView name = (TextView)findViewById(R.id.name);
-                name.setText(user_name);
-                TextView phone = (TextView)findViewById(R.id.phone);
-                phone.setText(user_phone);
-
+                name = user_name;
 
             }
+
+            TextView nameText = (TextView)findViewById(R.id.name_my);
+            nameText.setText(name);
+            //TextView phone = (TextView)findViewById(R.id.phone);
+            //phone.setText(user_phone);
 
 
         } catch (JSONException e) {
@@ -718,6 +759,96 @@ public class MyActivity extends AppCompatActivity {
             Log.d(TAG_USER, "showResult : ", e);
         }
 
+    }
+
+    // 서버 - 탈퇴
+    class InsertData extends AsyncTask<String, Void, String> {
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = ProgressDialog.show(MyActivity.this,
+                    "Please Wait", null, true, true);
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            progressDialog.dismiss();
+            //mTextViewResult.setText(result);
+            Log.d(TAG, "POST response  - " + result);
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String id = (String)params[0];
+
+            String serverURL = "http://211.253.9.84/deleteuser.php";
+            String postParameters = "id=" + id;
+
+
+            try {
+
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                //httpURLConnection.setRequestProperty("content-type", "application/json");
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.connect();
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+                Log.d(TAG, "POST response code - " + responseStatusCode);
+
+                InputStream inputStream;
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                }
+                else{
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+
+
+                bufferedReader.close();
+
+
+                return sb.toString();
+
+
+            } catch (Exception e) {
+
+                Log.d(TAG, "InsertData: Error ", e);
+
+                return new String("Error: " + e.getMessage());
+            }
+
+        }
     }
 
 }
